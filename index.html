@@ -1,0 +1,263 @@
+from IPython.display import display, HTML
+
+html_code = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Healthcare Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+        }
+
+        .about {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .about h2 {
+            color: #4CAF50;
+        }
+
+        .about p {
+            font-size: 1.2rem;
+        }
+
+        .features {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .features h2 {
+            color: #4CAF50;
+        }
+
+        .features ul {
+            list-style-type: none;
+        }
+
+        .features li {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .upload-section {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .upload-section h2 {
+            color: #4CAF50;
+        }
+
+        .upload-section form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .upload-section label {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .upload-section input[type="file"] {
+            margin-bottom: 10px;
+        }
+
+        .upload-section button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upload-section button:hover {
+            background-color: #45a049;
+        }
+
+        .upload-section .image-preview {
+            margin-top: 20px;
+        }
+
+        .upload-section img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .upload-section p {
+            font-size: 1rem;
+            color: #888;
+        }
+
+        .query-section {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .query-section h2 {
+            color: #4CAF50;
+        }
+
+        .query-section form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .query-section textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .query-section input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .query-section button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .query-section button:hover {
+            background-color: #45a049;
+        }
+
+        .answer-section p {
+            font-weight: bold;
+            color: #f44336;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI-Powered Healthcare Assistant</h1>
+        <p>Your virtual assistant for healthcare insights and analysis</p>
+    </header>
+
+    <section class="about">
+        <h2>About the Assistant</h2>
+        <p>This AI Healthcare Assistant uses state-of-the-art algorithms to assist in diagnosing medical conditions, analyzing medical images, and answering clinical queries.</p>
+    </section>
+
+    <section class="features">
+        <h2>Features</h2>
+        <ul>
+            <li><strong>Medical Image Analysis:</strong> Upload X-rays, CT scans, and MRIs for analysis.</li>
+            <li><strong>Clinical Query Answering:</strong> Ask questions related to medical conditions, treatments, or symptoms.</li>
+        </ul>
+    </section>
+
+    <section class="upload-section">
+        <h2>Upload a Medical Image</h2>
+        <form action="#" method="POST" enctype="multipart/form-data">
+            <label for="upload-file">Select an image (X-ray, MRI, or CT Scan)</label>
+            <input type="file" id="upload-file" name="file" accept=".jpg, .jpeg, .png, .gif">
+            <button type="submit" class="upload-button">Upload Image</button>
+        </form>
+        <div class="image-preview">
+            <img id="uploaded-image" src="#" alt="Uploaded Image Preview" style="display:none;">
+            <p id="image-status">Upload an image to start analysis.</p>
+        </div>
+    </section>
+
+    <section class="query-section">
+        <h2>Ask a Clinical Question</h2>
+        <form action="#">
+            <textarea id="context" placeholder="Enter clinical context or medical notes" rows="4"></textarea>
+            <input type="text" id="question" placeholder="Ask a clinical question" />
+            <button type="button" id="get-answer-button">Get Answer</button>
+        </form>
+        <div id="answer" class="answer-section">
+            <p>Please provide both context and a question to get an answer.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 AI-Powered Healthcare Assistant | Contact: support@healthassistant.com</p>
+    </footer>
+
+    <script>
+        const uploadInput = document.getElementById('upload-file');
+        const uploadedImage = document.getElementById('uploaded-image');
+        const imageStatus = document.getElementById('image-status');
+
+        uploadInput.addEventListener('change', () => {
+            const file = uploadInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.style.display = "block";
+                    imageStatus.textContent = "Analyzing image for abnormalities...";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const getAnswerButton = document.getElementById('get-answer-button');
+        const answerSection = document.getElementById('answer');
+        getAnswerButton.addEventListener('click', () => {
+            const context = document.getElementById('context').value;
+            const question = document.getElementById('question').value;
+            if (context && question) {
+                answerSection.innerHTML = `<p><strong>Answer:</strong> AI is analyzing your question...</p>`;
+            } else {
+                answerSection.innerHTML = `<p><strong>Error:</strong> Please provide both context and a question.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
+"""
+
+# Display the HTML content
+display(HTML(html_code))
